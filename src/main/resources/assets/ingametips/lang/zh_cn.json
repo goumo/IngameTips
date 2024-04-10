@@ -1,0 +1,30 @@
+{
+  "item.ingametips.test_item": "屎",
+  "tip.ingametips.error.load": "错误： 文件读取失败",
+  "tip.ingametips.error.save": "错误： 文件保存失败",
+  "tip.ingametips.error.save_desc": "保存文件时出现了未知错误",
+  "tip.ingametips.error.empty": "错误： 没有文本可供显示",
+  "tip.ingametips.error.invalid": "错误： 无效的Json文件",
+  "tip.ingametips.error.not_exists": "错误： 文件不存在",
+  "tip.ingametips.error.desc": "请检查整合包是否安装成功或反馈这个bug",
+  "tip.ingametips.too_long": "这条提示好像有些太长了，请查看已解锁的提示列表",
+
+  "tip.gui.close": "关闭",
+  "tip.gui.pin": "固定到右侧HUD",
+
+  "tip.ingametips.empty.title": "哇，这里什么都没有",
+
+  "tip.ingametips.default.title": "欢迎来到冬季救援!",
+  "tip.ingametips.default.desc1": "当你游玩时这里会显示各类提示，记得仔细阅读!",
+  "tip.ingametips.default.desc2": "右上角为关闭按钮，按下§6[TAB]§r使用鼠标来选择.",
+
+  "tip.ingametips.default2.title": "有提示没看清楚?",
+  "tip.ingametips.default2.desc1": "打开聊天栏，右下角的按钮可以查看所有已解锁的提示哦.",
+
+  "tip.ingametips.update.title": "冬季救援有新版本!",
+  "tip.ingametips.update.desc1": "点击左侧的按钮前往整合包发布网站下载更新!",
+
+  "tip.ingametips.music_warning.title": "等一下!",
+  "tip.ingametips.music_warning.desc1": "将音乐关闭可能无法体验我们为冬季救援提供的音乐",
+  "tip.ingametips.music_warning.desc2": "原版的音乐已经被禁用，如果您希望重新打开请修改配置文件: '&7$configPath$\\frostedheart-client.toml&r'"
+}
