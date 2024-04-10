@@ -50,10 +50,6 @@ public class TipListScreen extends Screen {
 
         tipList = TipHandler.getVisibleUnlocked();
 
-        for (int i = 0; i < 100; i++) {
-            tipList.add(i + "");
-        }
-
         if (tipList.isEmpty()) {
             tipList.add("empty");
         }

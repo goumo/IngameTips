@@ -23,6 +23,7 @@ public class IconButton extends Button {
     public static final Point ICON_BOX_ON        = new Point(10,30);
     public static final Point ICON_CROSS         = new Point(20,30);
     public static final Point ICON_HISTORY       = new Point(30,30);
+    public static final Point ICON_TRASH_CAN     = new Point(50,30);
 
     public final Point currentIcon;
     public final int color;
@@ -54,6 +55,7 @@ public class IconButton extends Button {
         RenderSystem.setShaderColor(r, g, b, alpha);
         Minecraft.getInstance().getTextureManager().bindForSetup(ICON_LOCATION);
         blit(ps, x, y, currentIcon.X, currentIcon.Y, 10, 10, 80, 80);
+        RenderSystem.setShaderColor(1,1,1,1);
         RenderSystem.disableBlend();
     }
 

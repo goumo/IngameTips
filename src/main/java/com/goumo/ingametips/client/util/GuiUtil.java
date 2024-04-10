@@ -52,6 +52,7 @@ public class GuiUtil {
             mc.getTextureManager().bindForSetup(resourceLocation);
             GuiComponent.blit(ps, x, y, w, h, uOffset, vOffset, uWidth, vHeight, textureW, textureH);
         }
+        RenderSystem.setShaderColor(1,1,1,1);
 
         return isMouseIn(mouseX, mouseY, x, y, w, h) && isLeftClicked();
     }
@@ -63,7 +64,6 @@ public class GuiUtil {
             float g = (color >> 8 & 0xFF) / 255F;
             float b = (color & 0xFF) / 255F;
 
-            mc.font.draw(ps, IconButton.ICON_LOCATION.toString(), 20, y-10, color);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShaderTexture(0, IconButton.ICON_LOCATION);
@@ -74,6 +74,7 @@ public class GuiUtil {
             RenderSystem.setShaderTexture(0, IconButton.ICON_LOCATION);
             GuiComponent.blit(ps, x, y, 10, 10, icon.X, icon.Y, 10, 10, 80, 80);
         }
+        RenderSystem.setShaderColor(1,1,1,1);
     }
 
     public static boolean isMouseIn(int mouseX, int mouseY, int x, int y, int w, int h) {

@@ -2,6 +2,7 @@ package com.goumo.ingametips.client;
 
 import com.goumo.ingametips.client.gui.EmptyScreen;
 import com.goumo.ingametips.client.gui.TipListScreen;
+import com.goumo.ingametips.client.gui.widget.DebugScreen;
 import com.goumo.ingametips.client.gui.widget.IconButton;
 import com.goumo.ingametips.client.hud.TipHUD;
 import com.goumo.ingametips.client.util.GuiUtil;
@@ -32,7 +33,7 @@ public class RenderHUD {
 
         if (renderQueue.isEmpty()) return;
         if (mc.screen != null) {
-            if (!(mc.screen instanceof ChatScreen) && !(mc.screen instanceof EmptyScreen)) {
+            if (!(mc.screen instanceof ChatScreen) && !(mc.screen instanceof EmptyScreen) && !(mc.screen instanceof DebugScreen)) {
                 return;
             }
         }
@@ -67,7 +68,7 @@ public class RenderHUD {
             }
         }
 
-        if (renderQueue.isEmpty() || gui instanceof ChatScreen || gui instanceof EmptyScreen || gui instanceof TipListScreen) {
+        if (renderQueue.isEmpty() || gui instanceof ChatScreen || gui instanceof EmptyScreen || gui instanceof TipListScreen || gui instanceof DebugScreen) {
             return;
         }
 

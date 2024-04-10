@@ -22,7 +22,7 @@ public class DisplayTipPacket {
     }
 
     public void handler(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> TipHandler.addToRenderQueue(ID, false));
+        ctx.get().enqueueWork(() -> TipHandler.displayTip(ID, false));
         ctx.get().setPacketHandled(true);
     }
 }
