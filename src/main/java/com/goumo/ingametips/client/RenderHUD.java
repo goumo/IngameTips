@@ -2,7 +2,7 @@ package com.goumo.ingametips.client;
 
 import com.goumo.ingametips.client.gui.EmptyScreen;
 import com.goumo.ingametips.client.gui.TipListScreen;
-import com.goumo.ingametips.client.gui.widget.DebugScreen;
+import com.goumo.ingametips.client.gui.DebugScreen;
 import com.goumo.ingametips.client.gui.widget.IconButton;
 import com.goumo.ingametips.client.hud.TipHUD;
 import com.goumo.ingametips.client.util.GuiUtil;

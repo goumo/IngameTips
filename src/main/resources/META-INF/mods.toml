@@ -3,11 +3,11 @@ loaderVersion="[40,)"
 license="All rights reserved"
 [[mods]]
 modId="ingametips"
-version="${file.jarVersion}"
+version="1.0.1"
 displayName="Ingame Tips"
 authors="goumo_g"
 description='''
-Hi!
+Display tip in the game!
 '''
 [[dependencies.ingametips]]
     modId="forge"

@@ -3,7 +3,9 @@ package com.goumo.ingametips.client;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.goumo.ingametips.IngameTips;
+import com.goumo.ingametips.client.gui.DebugScreen;
 import com.goumo.ingametips.client.util.AnimationUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -297,5 +299,11 @@ public class TipHandler {
 
     public static void clearCache() {
         CACHE.clear();
+    }
+
+    public static void openDebugScreen() {
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().setScreen(new DebugScreen());
+        }
     }
 }

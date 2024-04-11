@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -112,8 +111,7 @@ public class GuiUtil {
     }
 
     public static int formatAndDraw(String text, PoseStack ps, Font font, float x, float y, int maxWidth, int color, int lineSpace, boolean shadow) {
-        text = text.replaceAll("&(?!&)", "\u00a7")
-                    .replaceAll("\\$configPath\\$", FMLPaths.CONFIGDIR.get().toString().replaceAll("\\\\", "\\\\\\\\"));
+        text = text.replaceAll("\\$GAMEPATH\\$", FMLPaths.GAMEDIR.get().toString().replaceAll("\\\\", "\\\\\\\\"));
 
         return drawWrapString(text, ps, font, x, y, maxWidth, color, lineSpace, shadow);
     }
