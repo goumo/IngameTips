@@ -2,7 +2,6 @@ package com.goumo.ingametips.client;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.goumo.ingametips.IngameTips;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -77,14 +75,13 @@ public class UnlockedTipManager {
 
         LOGGER.debug("Creating file: '{}'", IngameTips.UNLCOKED_FILE);
         try (FileWriter writer = new FileWriter(IngameTips.UNLCOKED_FILE)) {
+            this.visible = new ArrayList<>();
+            this.hide = new ArrayList<>();
+            this.custom = new ArrayList<>();
             GSON.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.visible = new ArrayList<>();
-        this.hide = new ArrayList<>();
-        this.custom = new ArrayList<>();
     }
 
     public List<String> getVisible() {
@@ -110,6 +107,7 @@ public class UnlockedTipManager {
     }
 
     public void unlockCustom(TipElement ele) {
+        if (isUnlocked(ele.ID)) return;
         String[] list = new String[] {
                 ele.ID,
                 ele.contents.get(0).getString(),
