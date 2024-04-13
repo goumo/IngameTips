@@ -21,7 +21,7 @@ public class TipElement implements Cloneable {
     public boolean alwaysVisible = false;
     public boolean onceOnly = false;
     public boolean hide = false;
-    public boolean fromFile = false;
+    public boolean history = false;
     public int visibleTime = 30000;
     public int fontColor = 0xFFC6FCFF;
     public int BGColor = 0xFF000000;
@@ -34,14 +34,10 @@ public class TipElement implements Cloneable {
     }
 
     public TipElement(String ID) {
-        File filePath = new File(IngameTips.CONFIG_PATH, ID + ".json");
-
         LOGGER.debug("Loading tip '{}'", ID);
         this.ID = ID;
-        readFromJsonFile(filePath);
-    }
 
-    public void readFromJsonFile(File filePath) {
+        File filePath = new File(IngameTips.TIPS, ID + ".json");
         if (!filePath.exists()) {
             LOGGER.error("File does not exists '{}'", filePath);
             replaceToError(filePath, "not_exists");
@@ -49,6 +45,10 @@ public class TipElement implements Cloneable {
             return;
         }
 
+        readFromJsonFile(filePath);
+    }
+
+    public void readFromJsonFile(File filePath) {
         try {
             String content = new String(Files.readAllBytes(Paths.get(String.valueOf(filePath))));
             Gson gson = new Gson();
@@ -67,13 +67,13 @@ public class TipElement implements Cloneable {
                 return;
             }
 
-            if (jsonObject.has("fontColor")) {fontColor = Integer.parseUnsignedInt(jsonObject.get("fontColor").getAsString(), 16);}
+            if (jsonObject.has("fontColor"      )) {fontColor = Integer.parseUnsignedInt(jsonObject.get("fontColor").getAsString(), 16);}
             if (jsonObject.has("backgroundColor")) {BGColor = Integer.parseUnsignedInt(jsonObject.get("backgroundColor").getAsString(), 16);}
-            if (jsonObject.has("alwaysVisible")) {alwaysVisible = jsonObject.get("alwaysVisible").getAsBoolean();}
-            if (jsonObject.has("onceOnly"     )) {onceOnly = jsonObject.get("onceOnly").getAsBoolean();}
-            if (jsonObject.has("hide"         )) {hide = jsonObject.get("hide").getAsBoolean();}
-            if (jsonObject.has("visibleTime"  )) {visibleTime = Math.max(jsonObject.get("visibleTime").getAsInt(), 0);}
-            fromFile = true;
+            if (jsonObject.has("alwaysVisible"  )) {alwaysVisible = jsonObject.get("alwaysVisible").getAsBoolean();}
+            if (jsonObject.has("onceOnly"       )) {onceOnly = jsonObject.get("onceOnly").getAsBoolean();}
+            if (jsonObject.has("hide"           )) {hide = jsonObject.get("hide").getAsBoolean();}
+            if (jsonObject.has("visibleTime"    )) {visibleTime = Math.max(jsonObject.get("visibleTime").getAsInt(), 0);}
+            history = true;
 
         } catch (JsonSyntaxException e) {
             LOGGER.error("Invalid JSON file format '{}'", filePath);

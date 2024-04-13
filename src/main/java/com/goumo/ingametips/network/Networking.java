@@ -21,16 +21,31 @@ public class Networking {
         );
 
         CHANNEL.registerMessage(ID++,
-                DisplayTipPacket.class,
-                DisplayTipPacket::encode,
-                DisplayTipPacket::new,
-                DisplayTipPacket::handler);
+                TipPacket.class,
+                TipPacket::encode,
+                TipPacket::new,
+                TipPacket::handler
+        );
+
+        CHANNEL.registerMessage(ID++,
+                CustomTipPacket.class,
+                CustomTipPacket::encode,
+                CustomTipPacket::new,
+                CustomTipPacket::handler
+        );
     }
 
     public static void send(ServerPlayer player, String ID) {
         CHANNEL.send(
                 PacketDistributor.PLAYER.with(() -> player),
-                new DisplayTipPacket(ID)
+                new TipPacket(ID)
+        );
+    }
+
+    public static void sendCustom(ServerPlayer player,String title, String content, int visibleTime, boolean history) {
+        CHANNEL.send(
+                PacketDistributor.PLAYER.with(() -> player),
+                new CustomTipPacket(title, content, visibleTime, history)
         );
     }
 }

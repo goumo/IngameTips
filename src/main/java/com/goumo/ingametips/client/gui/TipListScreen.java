@@ -1,10 +1,12 @@
 package com.goumo.ingametips.client.gui;
 
+import com.goumo.ingametips.IngameTips;
 import com.goumo.ingametips.client.TipElement;
-import com.goumo.ingametips.client.TipHandler;
+import com.goumo.ingametips.client.UnlockedTipManager;
 import com.goumo.ingametips.client.gui.widget.IconButton;
 import com.goumo.ingametips.client.util.AnimationUtil;
 import com.goumo.ingametips.client.util.GuiUtil;
+import com.goumo.ingametips.client.util.TipDisplayUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,14 +14,19 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class TipListScreen extends Screen {
-    private final boolean background;
+    private static final UnlockedTipManager manager = IngameTips.unlockedTipManager;
 
-    public static String select = "";
+    private final boolean background;
+    private final Map<String, String[]> customTipList = new HashMap<>();
 
     private List<String> tipList;
     private TipElement selectEle = null;
@@ -31,6 +38,8 @@ public class TipListScreen extends Screen {
     private double textScroll = 0;
     private double displayListScroll = 0;
     private double displayTextScroll = 0;
+
+    public static String select = "";
 
     public TipListScreen(boolean background) {
         super(new TextComponent(""));
@@ -45,13 +54,17 @@ public class TipListScreen extends Screen {
             onClose();
         }));
         this.addRenderableWidget(new IconButton(0, 0, IconButton.ICON_LOCK, 0xFFC6FCFF, new TranslatableComponent("tip.gui.pin"), (button) -> {
-            TipHandler.forceAdd(select, true);
+            TipDisplayUtil.forceAdd(selectEle, true);
         }));
 
-        tipList = TipHandler.getVisibleUnlocked();
+        tipList = new ArrayList<>(manager.getVisible());
+        manager.getCustom().forEach((s) -> {
+            customTipList.put(s[0], s);
+            tipList.add(s[0]);
+        });
 
-        if (tipList.isEmpty()) {
-            tipList.add("empty");
+        if (!tipList.contains(select)) {
+            select = "";
         }
 
         GuiHeight = (int)(height*0.8F);
@@ -63,7 +76,7 @@ public class TipListScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack ps, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack ps, int mouseX, int mouseY, float partialTicks) {
         float fadeIn = AnimationUtil.calcFadeIn(400, "TipListGuiFading", false);
         int BGColor = (int)(fadeIn * (background ? 128 : 77)) << 24;
         int x = width - (int)(width*0.6F*fadeIn);
@@ -174,8 +187,12 @@ public class TipListScreen extends Screen {
                 }
                 fill(ps, BGOutline, BGOutline, BGOutline+1, BGOutline + 10-BGOutline, fontColor);
 
-                String text = "tip.ingametips." + list.get(i) + ".title";
-                text = I18n.get(text);
+                String text = list.get(i);
+                if (text.startsWith("*custom*")) {
+                    text = text.substring(8);
+                } else {
+                    text = I18n.get("tip." + IngameTips.MOD_ID + "." + list.get(i) + ".title");
+                }
 
                 if (font.width(text) > BGWidth) {
                     text = text.substring(0, Math.min(text.length(), BGWidth/6)) + "...";
@@ -192,13 +209,23 @@ public class TipListScreen extends Screen {
     }
 
     private void renderTipContent(PoseStack ps, int x, int y) { //TODO 搜索和分组
+        boolean custom = select.startsWith("*custom*");
         if (selectEle == null || !selectEle.ID.equals(select)) {
-            selectEle = TipHandler.getTipEle(select);
+            if (custom) {
+                TipElement ele = new TipElement();
+                ele.ID = customTipList.get(select)[0];
+                ele.contents.add(new TextComponent(customTipList.get(select)[1]));
+                ele.contents.add(new TextComponent(customTipList.get(select)[2]));
+                ele.visibleTime = Integer.parseInt(customTipList.get(select)[3]);
+                selectEle = ele;
+            } else {
+                selectEle = TipDisplayUtil.getTipEle(select);
+            }
         }
 
         //移除不应该存在的提示
         if (selectEle.hide) {
-            TipHandler.removeUnlocked(selectEle.ID);
+            IngameTips.unlockedTipManager.removeUnlocked(selectEle.ID);
             tipList.remove(select);
             setSelect("");
             listHeight = tipList.size()*16;
@@ -371,7 +398,7 @@ public class TipListScreen extends Screen {
             AnimationUtil.removeAnimation("TipListListSelD" + name);
         });
 
-        TipHandler.resetTipAnimation();
+        TipDisplayUtil.resetTipAnimation();
         super.onClose();
     }
 

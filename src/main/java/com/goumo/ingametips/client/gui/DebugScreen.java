@@ -1,7 +1,8 @@
 package com.goumo.ingametips.client.gui;
 
-import com.goumo.ingametips.client.TipHandler;
+import com.goumo.ingametips.IngameTips;
 import com.goumo.ingametips.client.gui.widget.IconButton;
+import com.goumo.ingametips.client.util.TipDisplayUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
@@ -15,14 +16,14 @@ public class DebugScreen extends Screen {
     @Override
     protected void init() {
         this.addRenderableWidget(new IconButton((int) (this.width*0.5-25), (int) (this.height*0.4), IconButton.ICON_TRASH_CAN, 0xFFC6FCFF, new TranslatableComponent("tip.gui.clear_cache"), (b) -> {
-            TipHandler.clearCache();
+            TipDisplayUtil.clearCache();
         }));
         this.addRenderableWidget(new IconButton((int) (this.width*0.5-5), (int) (this.height*0.4), IconButton.ICON_CROSS, 0xFFC6FCFF, new TranslatableComponent("tip.gui.clear_queue"), (b) -> {
-            TipHandler.clearRenderQueue();
+            TipDisplayUtil.clearRenderQueue();
         }));
         this.addRenderableWidget(new IconButton((int) (this.width*0.5+15), (int) (this.height*0.4), IconButton.ICON_HISTORY, 0xFFFF5340, new TranslatableComponent("tip.gui.reset_unlock"), (b) -> {
-            TipHandler.resetUnlockedFile();
-            TipHandler.loadUnlockedFromFile();
+            IngameTips.unlockedTipManager.createFile();
+            IngameTips.unlockedTipManager.loadFromFile();
         }));
     }
 

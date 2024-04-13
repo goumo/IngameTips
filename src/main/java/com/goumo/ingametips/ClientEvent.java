@@ -1,9 +1,11 @@
 package com.goumo.ingametips;
 
 import com.goumo.ingametips.client.TipElement;
-import com.goumo.ingametips.client.TipHandler;
+import com.goumo.ingametips.client.UnlockedTipManager;
+import com.goumo.ingametips.client.util.TipDisplayUtil;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,22 +13,22 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvent {
     @SubscribeEvent
-    public static void displayFileReadError(TickEvent event) {
-        if (TipHandler.readError) {
+    public static void displayFileReadError(ScreenOpenEvent event) {
+        if (event.getScreen() instanceof TitleScreen && !UnlockedTipManager.error.isEmpty()) {
             TipElement ele = new TipElement();
-            ele.replaceToError(TipHandler.UNLOCKED_FILEPATH, "load");
-            TipHandler.displayTip(ele, true);
-            TipHandler.readError = false;
+            ele.replaceToError(IngameTips.UNLCOKED_FILE, UnlockedTipManager.error);
+            TipDisplayUtil.displayTip(ele, true);
+            UnlockedTipManager.error = "";
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        TipHandler.clearRenderQueue();
+        TipDisplayUtil.clearRenderQueue();
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        TipHandler.clearRenderQueue();
+        TipDisplayUtil.clearRenderQueue();
     }
 }

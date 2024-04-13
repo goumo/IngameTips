@@ -1,19 +1,19 @@
 package com.goumo.ingametips.network;
 
-import com.goumo.ingametips.client.TipHandler;
+import com.goumo.ingametips.client.util.TipDisplayUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class DisplayTipPacket {
+public class TipPacket {
     private final String ID;
 
-    public DisplayTipPacket(FriendlyByteBuf buffer) {
+    public TipPacket(FriendlyByteBuf buffer) {
         ID = buffer.readUtf();
     }
 
-    public DisplayTipPacket(String ID) {
+    public TipPacket(String ID) {
         this.ID = ID;
     }
 
@@ -22,7 +22,7 @@ public class DisplayTipPacket {
     }
 
     public void handler(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> TipHandler.displayTip(ID, false));
+        ctx.get().enqueueWork(() -> TipDisplayUtil.displayTip(ID, false));
         ctx.get().setPacketHandled(true);
     }
 }

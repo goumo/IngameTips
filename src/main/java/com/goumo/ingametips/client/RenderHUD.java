@@ -1,11 +1,12 @@
 package com.goumo.ingametips.client;
 
+import com.goumo.ingametips.client.gui.DebugScreen;
 import com.goumo.ingametips.client.gui.EmptyScreen;
 import com.goumo.ingametips.client.gui.TipListScreen;
-import com.goumo.ingametips.client.gui.DebugScreen;
 import com.goumo.ingametips.client.gui.widget.IconButton;
 import com.goumo.ingametips.client.hud.TipHUD;
 import com.goumo.ingametips.client.util.GuiUtil;
+import com.goumo.ingametips.client.util.TipDisplayUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -47,7 +48,7 @@ public class RenderHUD {
             if (renderQueue.size() <= 1 && mc.screen instanceof EmptyScreen) {
                 mc.popGuiLayer();
             }
-            TipHandler.removeCurrent();
+            TipDisplayUtil.removeCurrent();
             return;
 
         } else if (!GuiUtil.isKeyDown(258) && mc.screen instanceof EmptyScreen) {
@@ -77,7 +78,7 @@ public class RenderHUD {
         }
 
         if (!currentTip.visible) {
-            TipHandler.removeCurrent();
+            TipDisplayUtil.removeCurrent();
             return;
         }
 

@@ -111,7 +111,8 @@ public class GuiUtil {
     }
 
     public static int formatAndDraw(String text, PoseStack ps, Font font, float x, float y, int maxWidth, int color, int lineSpace, boolean shadow) {
-        text = text.replaceAll("\\$GAMEPATH\\$", FMLPaths.GAMEDIR.get().toString().replaceAll("\\\\", "\\\\\\\\"));
+        text = text.replaceAll("&(?!&)", "\u00a7")
+                   .replaceAll("\\$GAMEPATH\\$", FMLPaths.GAMEDIR.get().toString().replaceAll("\\\\", "\\\\\\\\"));
 
         return drawWrapString(text, ps, font, x, y, maxWidth, color, lineSpace, shadow);
     }
