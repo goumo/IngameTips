@@ -3,7 +3,7 @@ loaderVersion="[40,)"
 license="All rights reserved"
 [[mods]]
 modId="ingametips"
-version="1.0.1"
+version="1.0.3"
 displayName="Ingame Tips"
 authors="goumo_g"
 description='''

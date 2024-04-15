@@ -20,14 +20,20 @@ public class UnlockedTipManager {
     private static final Logger LOGGER = LogManager.getLogger();
     private List<String> visible;
     private List<String> hide;
-    private List<String[]> custom;
+    private List<List<String>> custom;
 
+    public static final UnlockedTipManager manager = new UnlockedTipManager();
     public static String error = "";
 
-    public UnlockedTipManager() {
-        this.visible = new ArrayList<>();
-        this.hide = new ArrayList<>();
-        this.custom = new ArrayList<>();
+    static {
+        if (IngameTips.TIPS.mkdir()) {
+            LOGGER.info("Config path created");
+        }
+        manager.loadFromFile();
+    }
+
+    private UnlockedTipManager() {
+        reset();
     }
 
     public void loadFromFile() {
@@ -42,7 +48,6 @@ public class UnlockedTipManager {
             this.visible = fileManager.visible;
             this.hide = fileManager.hide;
             this.custom = fileManager.custom;
-            this.custom.removeIf(list -> list.length != 4);
 
         } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
@@ -75,9 +80,7 @@ public class UnlockedTipManager {
 
         LOGGER.debug("Creating file: '{}'", IngameTips.UNLCOKED_FILE);
         try (FileWriter writer = new FileWriter(IngameTips.UNLCOKED_FILE)) {
-            this.visible = new ArrayList<>();
-            this.hide = new ArrayList<>();
-            this.custom = new ArrayList<>();
+            reset();
             GSON.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,7 +95,7 @@ public class UnlockedTipManager {
         return hide;
     }
 
-    public List<String[]> getCustom() {
+    public List<List<String>> getCustom() {
         return custom;
     }
 
@@ -108,20 +111,23 @@ public class UnlockedTipManager {
 
     public void unlockCustom(TipElement ele) {
         if (isUnlocked(ele.ID)) return;
-        String[] list = new String[] {
-                ele.ID,
-                ele.contents.get(0).getString(),
-                ele.contents.get(1).getString(),
-                Integer.toString(ele.visibleTime),
-        };
-        this.custom.add(list);
+        List<String> custom = new ArrayList<>();
+
+        custom.add(ele.ID);
+        custom.add(Integer.toString(ele.visibleTime));
+        custom.add(ele.contents.get(0).getString());
+        for (int i = 1; i < ele.contents.size(); i++) {
+            custom.add(ele.contents.get(i).getString());
+        }
+
+        this.custom.add(custom);
         saveToFile();
     }
 
     public void removeUnlocked(String ID) {
         this.visible.remove(ID);
         this.hide.remove(ID);
-        this.custom.removeIf((list) -> list[0].equals(ID));
+        this.custom.removeIf((l) -> l.get(0).equals(ID));
         saveToFile();
     }
 
@@ -129,11 +135,13 @@ public class UnlockedTipManager {
         if (visible.contains(ID) || hide.contains(ID)) {
             return true;
         }
-        for (String[] list : custom) {
-            if (!(list.length == 3) && list[0].equals(ID)) {
-                return true;
-            }
-        }
-        return false;
+
+        return custom.stream().anyMatch(l -> l.get(0).equals(ID));
+    }
+
+    public void reset() {
+        this.visible = new ArrayList<>();
+        this.hide = new ArrayList<>();
+        this.custom = new ArrayList<>();
     }
 }

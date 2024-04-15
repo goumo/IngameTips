@@ -23,10 +23,8 @@ import java.util.Map;
 
 
 public class TipListScreen extends Screen {
-    private static final UnlockedTipManager manager = IngameTips.unlockedTipManager;
-
     private final boolean background;
-    private final Map<String, String[]> customTipList = new HashMap<>();
+    private final Map<String, List<String>> customTipList = new HashMap<>();
 
     private List<String> tipList;
     private TipElement selectEle = null;
@@ -57,10 +55,10 @@ public class TipListScreen extends Screen {
             TipDisplayUtil.forceAdd(selectEle, true);
         }));
 
-        tipList = new ArrayList<>(manager.getVisible());
-        manager.getCustom().forEach((s) -> {
-            customTipList.put(s[0], s);
-            tipList.add(s[0]);
+        tipList = new ArrayList<>(UnlockedTipManager.manager.getVisible());
+        UnlockedTipManager.manager.getCustom().forEach((c) -> {
+            customTipList.put(c.get(0), c);
+            tipList.add(c.get(0));
         });
 
         if (!tipList.contains(select)) {
@@ -213,23 +211,28 @@ public class TipListScreen extends Screen {
         if (selectEle == null || !selectEle.ID.equals(select)) {
             if (custom) {
                 TipElement ele = new TipElement();
-                ele.ID = customTipList.get(select)[0];
-                ele.contents.add(new TextComponent(customTipList.get(select)[1]));
-                ele.contents.add(new TextComponent(customTipList.get(select)[2]));
-                ele.visibleTime = Integer.parseInt(customTipList.get(select)[3]);
-                selectEle = ele;
+
+                try {
+                    ele.ID = customTipList.get(select).get(0);
+                    ele.visibleTime = Integer.parseInt(customTipList.get(select).get(1));
+                    for (int i = 2; i < customTipList.get(select).size(); i++) {
+                        ele.contents.add(new TextComponent(customTipList.get(select).get(i)));
+                    }
+                    selectEle = ele;
+                } catch (Exception e) {
+                    //移除有问题的自定义提示
+                    remove();
+                    return;
+                }
+
             } else {
                 selectEle = TipDisplayUtil.getTipEle(select);
             }
         }
 
-        //移除不应该存在的提示
         if (selectEle.hide) {
-            IngameTips.unlockedTipManager.removeUnlocked(selectEle.ID);
-            tipList.remove(select);
-            setSelect("");
-            listHeight = tipList.size()*16;
-            selectEle = null;
+            //移除不应该存在的提示
+            remove();
             return;
         }
 
@@ -293,6 +296,14 @@ public class TipListScreen extends Screen {
         ps.translate(0, barY, 0);
         fill(ps, x, y, x+w, y+barHeight, 0xFFC6FCFF);
         ps.popPose();
+    }
+
+    private void remove() {
+        UnlockedTipManager.manager.removeUnlocked(customTipList.get(select).get(0));
+        tipList.remove(select);
+        setSelect("");
+        listHeight = tipList.size()*16;
+        selectEle = null;
     }
 
     private void setSelect(String s) {

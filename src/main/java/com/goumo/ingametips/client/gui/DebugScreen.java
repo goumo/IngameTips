@@ -1,6 +1,6 @@
 package com.goumo.ingametips.client.gui;
 
-import com.goumo.ingametips.IngameTips;
+import com.goumo.ingametips.client.UnlockedTipManager;
 import com.goumo.ingametips.client.gui.widget.IconButton;
 import com.goumo.ingametips.client.util.TipDisplayUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,8 +22,7 @@ public class DebugScreen extends Screen {
             TipDisplayUtil.clearRenderQueue();
         }));
         this.addRenderableWidget(new IconButton((int) (this.width*0.5+15), (int) (this.height*0.4), IconButton.ICON_HISTORY, 0xFFFF5340, new TranslatableComponent("tip.gui.reset_unlock"), (b) -> {
-            IngameTips.unlockedTipManager.createFile();
-            IngameTips.unlockedTipManager.loadFromFile();
+            UnlockedTipManager.manager.createFile();
         }));
     }
 

@@ -1,6 +1,5 @@
 package com.goumo.ingametips.client.util;
 
-import com.goumo.ingametips.IngameTips;
 import com.goumo.ingametips.client.RenderHUD;
 import com.goumo.ingametips.client.TipElement;
 import com.goumo.ingametips.client.UnlockedTipManager;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 public class TipDisplayUtil {
     private static final Map<String, TipElement> CACHE = new HashMap<>();
-    private static final UnlockedTipManager manager = IngameTips.unlockedTipManager;
 
     public static void displayTip(String ID, boolean first) {
         displayTip(getTipEle(ID), first);
@@ -21,7 +19,7 @@ public class TipDisplayUtil {
 
     public static void displayTip(TipElement element, boolean first) {
         if (element.ID.isEmpty()) return;
-        if (element.onceOnly && manager.isUnlocked(element.ID)) return;
+        if (element.onceOnly && UnlockedTipManager.manager.isUnlocked(element.ID)) return;
 
         for (TipElement ele : RenderHUD.renderQueue) {
             if (ele.ID.equals(element.ID)) {
@@ -31,9 +29,9 @@ public class TipDisplayUtil {
 
         if (element.history) {
             if (element.ID.startsWith("*custom*")) {
-                manager.unlockCustom(element);
+                UnlockedTipManager.manager.unlockCustom(element);
             } else {
-                manager.unlock(element.ID, element.hide);
+                UnlockedTipManager.manager.unlock(element.ID, element.hide);
             }
         }
 
@@ -48,8 +46,11 @@ public class TipDisplayUtil {
         TipElement ele = new TipElement();
         ele.ID = "*custom*" + title;
         ele.history = history;
-        ele.contents.add(new TextComponent(title.replaceAll("_", " ")));
-        ele.contents.add(new TextComponent(content.replaceAll("_", " ")));
+        ele.contents.add(new TextComponent(title));
+        String[] contents = content.split("\\$");
+        for (String s : contents) {
+            ele.contents.add(new TextComponent(s));
+        }
 
         if (visibleTime == -1) {
             ele.alwaysVisible = true;
