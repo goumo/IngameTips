@@ -221,7 +221,7 @@ public class TipListScreen extends Screen {
                     selectEle = ele;
                 } catch (Exception e) {
                     //移除有问题的自定义提示
-                    remove();
+                    remove(customTipList.get(select).get(0));
                     return;
                 }
 
@@ -232,7 +232,7 @@ public class TipListScreen extends Screen {
 
         if (selectEle.hide) {
             //移除不应该存在的提示
-            remove();
+            remove(selectEle.ID);
             return;
         }
 
@@ -298,8 +298,8 @@ public class TipListScreen extends Screen {
         ps.popPose();
     }
 
-    private void remove() {
-        UnlockedTipManager.manager.removeUnlocked(customTipList.get(select).get(0));
+    private void remove(String ID) {
+        UnlockedTipManager.manager.removeUnlocked(ID);
         tipList.remove(select);
         setSelect("");
         listHeight = tipList.size()*16;
